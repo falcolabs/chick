@@ -1,0 +1,13 @@
+name: chick
+
+default:
+  - echo hi
+  - echo hi
+
+run:
+  - cargo run
+
+prod:
+  - cargo build --release
+
+

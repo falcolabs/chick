@@ -1,0 +1,12 @@
+[package]
+name = "chick"
+version = "0.1.0"
+edition = "2021"
+authors = ["triphuong@falcolabs.org"]
+license = "MIT"
+repository = "https://github.com/falcolabs/chick/"
+
+[dependencies]
+chrono = "0.4.38"
+serde = "1.0"
+serde_yaml = "0.9"
