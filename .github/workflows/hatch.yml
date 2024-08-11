@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: hatch
 run-name: ${{ github.actor }} hatched chick
 on:
     push:
