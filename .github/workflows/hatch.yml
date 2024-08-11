@@ -1,0 +1,44 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} hatched chick
+on:
+    push:
+    pull_request:
+jobs:
+    test:
+        name: cargo test
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+        - name: Setting up Rust toolchain
+          uses: actions-rust-lang/setup-rust-toolchain@v1
+        - name: Running cargo test
+          run: cargo test --all-features
+
+    formatting:
+        name: cargo fmt
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+        - name: Setting up Rust toolchain
+          uses: actions-rust-lang/setup-rust-toolchain@v1
+          with:
+            components: rustfmt
+        - name: Rustfmt Check
+          uses: actions-rust-lang/rustfmt@v1
+
+    build:
+        name: cargo test
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+        - name: Setting up Rust toolchain
+          uses: actions-rust-lang/setup-rust-toolchain@v1
+        - run: cargo build --release
+        - name: Producing artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            name: chick
+            path: target/release/chick

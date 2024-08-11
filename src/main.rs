@@ -3,6 +3,7 @@ use serde_yaml::Value;
 pub mod backends;
 pub mod color;
 pub mod logger;
+mod tests;
 
 static HELP: &str = r#"Usage: chick [OPTIONS...] [TARGETS...]
 
