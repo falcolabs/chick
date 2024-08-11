@@ -9,4 +9,8 @@ run:
 prod:
   - cargo build --release
 
+install:
+  - cargo build --release
+  - sudo cp target/release/chick /usr/local/bin/
+
 

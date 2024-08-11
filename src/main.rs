@@ -123,7 +123,7 @@ fn main() {
                     String::from_utf8(output.stdout).unwrap()
                 ));
                 logger::success(format!(
-                    "Package &6{}&r build FAILED. See above error message.",
+                    "Package &6{}&r build failed. See above error message for more information.",
                     package_name
                 ));
                 std::process::exit(1);
@@ -132,7 +132,7 @@ fn main() {
         logger::success(format!("Build step &d{}&r completed.", t.name));
     }
     logger::success(format!(
-        "Package &6{}&r build SUCCESSFULLY. No errors reported.",
+        "Package &6{}&r built successfully. No errors reported.",
         package_name
     ));
 }
