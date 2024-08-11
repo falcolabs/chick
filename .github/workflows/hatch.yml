@@ -5,7 +5,7 @@ on:
     pull_request:
 jobs:
     test:
-        name: cargo test
+        name: test
         runs-on: ubuntu-latest
         steps:
         - name: Checkout repository
@@ -16,7 +16,7 @@ jobs:
           run: cargo test --all-features
 
     formatting:
-        name: cargo fmt
+        name: trim
         runs-on: ubuntu-latest
         steps:
         - name: Checkout repository
@@ -29,7 +29,7 @@ jobs:
           uses: actions-rust-lang/rustfmt@v1
 
     build:
-        name: cargo test
+        name: hatch
         runs-on: ubuntu-latest
         steps:
         - name: Checkout repository
