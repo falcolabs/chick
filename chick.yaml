@@ -11,6 +11,6 @@ prod:
 
 install:
   - cargo build --release
-  - sudo cp target/release/chick /usr/local/bin/
+  - sudo install target/release/chick /usr/local/bin/
 
 
