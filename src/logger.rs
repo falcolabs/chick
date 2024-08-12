@@ -1,6 +1,6 @@
 use chrono::Local;
 
-use crate::color::{mccolor, Background, Text};
+use crate::color::{Background, Text};
 use core::panic;
 
 pub enum Level {
@@ -73,7 +73,7 @@ pub fn log_str<StringLike: AsRef<str>>(level: Level, content: StringLike) -> Str
         .build(),
         level.get_name(),
         Text::new().reset().build(),
-        mccolor(content.as_ref()),
+        content.as_ref(),
         Text::new().reset().build()
     );
     result

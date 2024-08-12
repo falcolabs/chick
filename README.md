@@ -21,3 +21,7 @@
   $ chick sus
   11:59:59  ERROR  Your build FAILED spectacularly. It is likely that your intelligence is inadequate for software development. Give up already.
   ```
+
+## Contribute
+Running you code `rustfmt` is required before commiting to this repository.
+Git should take care of that for you (check your `.git/hooks/pre-commit`).

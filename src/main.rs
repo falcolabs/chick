@@ -25,8 +25,11 @@ struct Task {
 
 #[inline(always)]
 fn buildstep_runquiet(task: Task, project_root: PathBuf, package_name: &str) {
-    logger::info(format!("Executing build step &d{}&r", task.name));
-    let cmd = task.commands.join(";");
+    logger::info(color::mccolor(&format!(
+        "Executing build step &d{}&r",
+        task.name
+    )));
+    let cmd = task.commands.join("\n");
     logger::debug(format!("{}", cmd));
     chick_panic(
         std::env::set_current_dir(project_root.clone()),
@@ -34,18 +37,21 @@ fn buildstep_runquiet(task: Task, project_root: PathBuf, package_name: &str) {
     );
     let output = chick_panic(
         std::process::Command::new("sh").arg("-c").arg(cmd).output(),
-        &format!("Unable to run build step &d{}&r", task.name),
+        &color::mccolor(&format!("Unable to run build step &d{}&r", task.name)),
     );
     if !output.status.success() {
-        logger::error(format!("Failed to run build step &d{}&r", task.name));
+        logger::error(color::mccolor(&format!(
+            "Failed to run build step &d{}&r",
+            task.name
+        )));
         logger::error("Process stdout:");
-        println!("{:#?}", String::from_utf8(output.stdout).unwrap());
+        println!("{}", String::from_utf8(output.stdout).unwrap());
         logger::error("Process stderr:");
-        println!("{:#?}", String::from_utf8(output.stderr).unwrap());
-        logger::error(format!(
+        println!("{}", String::from_utf8(output.stderr).unwrap());
+        logger::error(color::mccolor(&format!(
             "Package &6{}&r build failed. See above error message for more information.",
             package_name
-        ));
+        )));
         std::process::exit(1);
     }
     logger::success(format!("Build step &d{}&r completed.", task.name));
@@ -53,8 +59,11 @@ fn buildstep_runquiet(task: Task, project_root: PathBuf, package_name: &str) {
 
 #[inline(always)]
 fn buildstep_runloud(task: Task, project_root: PathBuf, package_name: &str) {
-    logger::info(format!("Executing build step &d{}&r", task.name));
-    let cmd = task.commands.join(";");
+    logger::info(color::mccolor(&format!(
+        "Executing build step &d{}&r",
+        task.name
+    )));
+    let cmd = task.commands.join("\n");
     logger::debug(format!("{}", cmd));
     chick_panic(
         std::env::set_current_dir(project_root.clone()),
@@ -62,17 +71,23 @@ fn buildstep_runloud(task: Task, project_root: PathBuf, package_name: &str) {
     );
     let status = chick_panic(
         std::process::Command::new("sh").arg("-c").arg(cmd).status(),
-        &format!("Unable to run build step &d{}&r", task.name),
+        &color::mccolor(&format!("Unable to run build step &d{}&r", task.name)),
     );
     if !status.success() {
-        logger::error(format!("Failed to run build step &d{}&r", task.name));
-        logger::error(format!(
+        logger::error(color::mccolor(&format!(
+            "Failed to run build step &d{}&r",
+            task.name
+        )));
+        logger::error(color::mccolor(&format!(
             "Package &6{}&r build failed. See above build log for more information.",
             package_name
-        ));
+        )));
         std::process::exit(1);
     }
-    logger::success(format!("Build step &d{}&r completed.", task.name));
+    logger::success(color::mccolor(&format!(
+        "Build step &d{}&r completed.",
+        task.name
+    )));
 }
 
 fn chick_panic<T, E: std::fmt::Display + std::fmt::Debug>(result: Result<T, E>, error: &str) -> T {
@@ -114,10 +129,13 @@ fn main() {
                         std::process::exit(0);
                     }
                     _ => {
-                        logger::error(format!(
+                        println!(
+                            "{}",
+                            color::mccolor(&format!(
                             "Unrecognized switch &c{}&r. Try using &a--help&r for valid switches.",
                             a
-                        ));
+                        ))
+                        );
                         std::process::exit(0);
                     }
                 }
@@ -140,17 +158,22 @@ fn main() {
     );
     let package_name = chick_unwrap(
         configuration.get("name"),
-        "Property 'name' is not defined in chick.yaml",
+        color::mccolor("Property &dname&r is not defined in chick.yaml").as_str(),
     )
     .as_str()
     .unwrap();
     if !is_verbose {
-        logger::info(format!(
-            "Building project &6{}&r &l&7(output hidden)&r",
-            package_name
+        logger::info(color::mccolor(
+            format!(
+                "Building project &6{}&r &l&7(output hidden)&r",
+                package_name
+            )
+            .as_str(),
         ));
     } else {
-        logger::info(format!("Building project &6{}&r", package_name));
+        logger::info(color::mccolor(
+            format!("Building project &6{}&r", package_name).as_str(),
+        ));
     }
     let build_root = std::env::current_dir().unwrap();
     let mut targets: Vec<String> = Vec::new();
@@ -167,16 +190,16 @@ fn main() {
             commands: chick_unwrap(
                 chick_unwrap(
                     configuration.get(t.clone()),
-                    &format!("Target '{}' not found.", t),
+                    &color::mccolor(format!("Target &d{}&r not found.", t).as_str()),
                 )
                 .as_sequence(),
-                &format!("Invalid target definition for '{}'", t),
+                &color::mccolor(format!("Invalid target definition for &d{}&r", t).as_str()),
             )
             .into_iter()
             .map(|e| {
                 chick_unwrap(
                     e.as_str(),
-                    &format!("Invalid syntax in target '{}' definition", t),
+                    &color::mccolor(format!("Invalid target definition for &d{}&r", t).as_str()),
                 )
                 .to_string()
             })
@@ -193,8 +216,11 @@ fn main() {
             buildstep_runloud(t, build_root.clone(), package_name);
         }
     }
-    logger::success(format!(
-        "Package &6{}&r built successfully. No errors reported.",
-        package_name
+    logger::success(color::mccolor(
+        format!(
+            "Package &6{}&r built successfully. No errors reported.",
+            package_name
+        )
+        .as_str(),
     ));
 }
