@@ -10,11 +10,11 @@ mod tests;
 static HELP: &str = r#"Usage: chick [OPTIONS...] [TARGETS...]
 
     -h, --help      display this help
-    -v, --verbose   enable verbose mode
+    -Q, --quiet     be quiet, hide output
+    -D, --debug     start chick in debug mode
 
-Errors should be reported on Github Issues for this project:
-https://github.com/falcolabs/chick/issues.
-            This chick from falcolabs does not have Super Cow Ability.
+Report errors at https://github.com/falcolabs/chick/issues.
+        This chick from falcolabs does not have Super Cow Ability.
 "#;
 
 #[derive(Debug, Clone)]
@@ -113,16 +113,19 @@ fn chick_unwrap<T>(option: Option<T>, error: &str) -> T {
 }
 
 fn main() {
-    let mut is_verbose = false;
+    let mut is_verbose = true;
 
     let args: Vec<String> = {
         let mut output: Vec<String> = Vec::new();
         for a in std::env::args() {
             if a.starts_with("--") || a.starts_with("-") {
                 match a.as_str() {
-                    "--verbose" | "-v" => {
+                    "--debug" | "-D" => {
                         logger::set_log_level(logger::Level::DEBUG);
-                        is_verbose = true;
+                        is_verbose = false;
+                    }
+                    "--quiet" | "-Q" => {
+                        is_verbose = false;
                     }
                     "--help" | "-h" => {
                         print!("{}", HELP);
